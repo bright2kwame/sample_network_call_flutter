@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:api_sample/album.dart';
 import 'package:api_sample/post.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -22,6 +23,31 @@ class _MyHomePageState extends State<MyHomePage> {
     getData();
     getDataList();
     super.initState();
+  }
+
+  getAlbumData() async {
+    String api = "https://jsonplaceholder.typicode.com/photos";
+    Uri uri = Uri.parse(api);
+    http.Response data = await http.get(uri);
+    List<Album> albums = [];
+    if (data.statusCode == 200) {
+      var decodedData = jsonDecode(data.body);
+      decodedData.forEach((var item) {
+        var album = parseAlbum(item);
+        album.toString();
+        albums.add(album);
+      });
+    } else {}
+  }
+
+  Album parseAlbum(var item) {
+    int albumId = item["albumId"];
+    int id = item["id"];
+    String title = item["title"];
+    String thumbnailUrl = item["thumbnailUrl"];
+    String url = item["url"];
+
+    return Album(albumId, id, title, thumbnailUrl, url);
   }
 
   getDataList() async {
